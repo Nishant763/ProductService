@@ -48,10 +48,7 @@ public class SelfProductService implements IProductService{
     public Product addProduct(Product product) {
         Optional<Category> categoryOptional = categoryRepository.findByName(product.getCategory().getName());
         if(categoryOptional.isEmpty()){
-            Category categoryToSave = new Category();
-            categoryToSave.setName(product.getCategory().getName());
-            Category savedCategory = categoryRepository.save(categoryToSave);
-            product.setCategory(savedCategory);
+
         } else {
             product.setCategory(categoryOptional.get());
         }
