@@ -1,16 +1,21 @@
 package com.example.product.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
 @Setter
 @Entity
-public class Category extends BaseModel{
+@JsonSerialize
+public class Category extends BaseModel implements Serializable {
+    @JsonIgnore
     @OneToMany(mappedBy = "category")
 //    // the column on the other side
     private List<Product> products;

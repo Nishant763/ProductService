@@ -10,6 +10,8 @@ import com.example.product.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,14 +22,18 @@ import java.util.Optional;
 @Qualifier("selfProductService")
 public class SelfProductService implements IProductService{
 
-    private ProductRepository productRepository;
-    private CategoryRepository categoryRepository;
 
     @Autowired
-    public SelfProductService(ProductRepository productRepository, CategoryRepository categoryRepository){
-        this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
-    }
+    private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+//    @Autowired
+//    public SelfProductService(ProductRepository productRepository, CategoryRepository categoryRepository){
+//        this.productRepository = productRepository;
+//        this.categoryRepository = categoryRepository;
+//    }
 
     @Override
     public Product getSingleProduct(Long id) throws InvalidProductIdException {
@@ -41,7 +47,15 @@ public class SelfProductService implements IProductService{
 
     @Override
     public List<Product> getAllProducts() {
-        return null;
+
+
+        List<Product> productList = productRepository.findAll();
+        return productList;
+    }
+
+    public Page<Product> getAllProductsContainingName(String name,int pageNumber,int size){
+
+        return productRepository.findAllByNameContaining(name, PageRequest.of(pageNumber,size));
     }
 
     @Override

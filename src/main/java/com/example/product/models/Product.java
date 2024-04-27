@@ -1,15 +1,20 @@
 package com.example.product.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Setter
 @Getter
 @Entity
-public class Product extends BaseModel{
+@JsonSerialize
+public class Product extends BaseModel implements Serializable {
 
     private String name;
     private String description;
@@ -19,6 +24,7 @@ public class Product extends BaseModel{
     // every product will have only one category
     // 1P : 1C
     // MP : 1C
+    @JsonIgnore
     @ManyToOne(cascade = {CascadeType.PERSIST})
 //    //PERSIST means saving, creating something new
     private Category category;

@@ -8,6 +8,8 @@ import com.example.product.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpMessageConverterExtractor;
@@ -24,6 +26,9 @@ public class FakeStoreProductService implements IProductService{
 
     @Autowired
     RestTemplate restTemplate;
+
+    @Autowired
+    private RedisTemplate<String, Long> redisTemplate;
 
     public Product getProductFromResponseDto(ProductResponseDto responseDto){
         Product product = new Product();
@@ -47,12 +52,22 @@ public class FakeStoreProductService implements IProductService{
             throw new InvalidProductIdException("");
         }
 
+        if(redisTemplate.opsForHash().hasKey("Products",id)){
+            return (Product) redisTemplate.opsForHash().get("PRODUCTS", id);
+        }
+
+
         // I should pass this 'id' to fakestore and get the details of this product.
         // "https://fakestoreapi.com/products/1"
         ProductResponseDto response = restTemplate.getForObject("https://fakestoreapi.com/products/" + id,
                 ProductResponseDto.class);
 
-        return getProductFromResponseDto(response);
+//        restTemplate.pos
+
+
+        Product product = getProductFromResponseDto(response);
+        redisTemplate.opsForHash().put("PRODUCTS",id,product);
+        return product;
     }
 
     @Override
@@ -76,6 +91,11 @@ public class FakeStoreProductService implements IProductService{
 
     @Override
     public Product updateProduct(Long id, Product product) {
+        return null;
+    }
+
+    @Override
+    public Page<Product> getAllProductsContainingName(String name, int pageNumber, int size) {
         return null;
     }
 

@@ -4,6 +4,7 @@ import com.example.product.dtos.ProductRequestDto;
 import com.example.product.exceptions.InvalidProductIdException;
 import com.example.product.exceptions.ProductDoesNotExistException;
 import com.example.product.models.Product;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface IProductService {
     Product addProduct(Product product);
 
     Product updateProduct(Long id, Product product) throws ProductDoesNotExistException;
+
+    Page<Product> getAllProductsContainingName(String name, int pageNumber, int size);
 }
